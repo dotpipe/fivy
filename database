@@ -1,0 +1,59 @@
+<?php
+require_once './config.php';
+require_once './db.php';
+
+// Create the users table
+$createUsersTable = <<<'SQL'
+CREATE TABLE IF NOT EXISTS users (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(255) NOT NULL,
+    paid BOOLEAN NOT NULL DEFAULT 0,
+    paid_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+SQL;
+
+// Create the pages table
+$createPagesTable = <<<'SQL'
+CREATE TABLE IF NOT EXISTS pages (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    directory VARCHAR(255) NOT NULL,
+    headline VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+SQL;
+
+// Create the likes table
+$createLikesTable = <<<'SQL'
+CREATE TABLE IF NOT EXISTS likes (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11) NOT NULL,
+    page VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+)
+SQL;
+
+// Create the dislikes table
+$createDislikesTable = <<<'SQL'
+CREATE TABLE IF NOT EXISTS dislikes (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11) NOT NULL,
+    page VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+)
+SQL;
+
+// Execute the create table queries
+$pdo->exec($createUsersTable);
+$pdo->exec($createPagesTable);
+$pdo->exec($createLikesTable);
+$pdo->exec($createDislikesTable);
+
+echo "Database tables created successfully!";

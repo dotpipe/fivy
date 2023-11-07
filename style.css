@@ -1,0 +1,52 @@
+a {
+    color: lightgrey;
+    text-decoration: none;
+    font-size: large;
+}
+
+li::marker {
+    content: '+ ';
+    color: crimson;
+}
+
+h1 {
+    color: lightgray;
+}
+
+body {
+    background: url('./gardendoor.webp') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.borders {
+    -webkit-text-stroke: 1px black;
+}
+
+button {
+    color: black;
+}
+
+.information {
+    color: black!;
+    background-color: white;
+    margin-left: 800px;
+    margin-top: 50px;
+    width: 400px;
+    padding: 4px;
+    height: max-content;
+}
+
+span, p, main {
+    color: lightgray;
+}
+
+.footer {
+    color:lightgray;
+    background-color: black;
+    height: fit-content;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    position:absolute;
+    z-index: 2;
+}
