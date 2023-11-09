@@ -20,10 +20,8 @@ else
 
 // Get today's page
 
-if (isset($_POST['page']) && $_POST['page'] != "") {
-    $_SESSION['page'] = $_POST['page'];
-}
 $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
+
 ?>
 
 <!DOCTYPE html>
@@ -41,10 +39,11 @@ $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
 </head>
 
 <body>
-    <article class="columns">
+    <div class="container">
+    <article class="menu">
         <?= include('menu.php'); ?>
     </article>
-    <article class="columns" style="align:top;">
+    <article class="prices" style="align:top;">
         <form method="POST" action="dashboard.php">
             <input type="text" name="page" placeholder="Enter Ticker here">
             <button onclick>Look Up</button>
@@ -75,7 +74,11 @@ $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
                 </script>
                 <?php
             }
-            if ($_SESSION['paid'] == 1 && $_SESSION['page'] == $_GET['page']) { ?>
+            if (substr($gptick,-1) == '?') {
+                $gptick = substr($gptick,0,-1);
+            }
+            // echo strtoupper(substr($_GET['page'],0,strlen($_GET['page']))) . " " .strtoupper($_SESSION['page3']);
+            if ($_SESSION['paid'] == 1 && strtoupper($_SESSION['page3']) == $gptick) { ?>
                 <pipe id="info" class="pipe" ajax="./btc.php?page=<?= $gptick; ?>" insert="info"></pipe>
             <?php } else {
                 echo "<h2>Please join if you love the site so much!<br>It's really good at figuring this hedge out!</h2>";
@@ -96,15 +99,15 @@ $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
             on that information
             every 5 days. And we keep it there so you see the element of surprise you're going to have forever.
             <br><br>This information is so accurate. Almost perfect. We hope you'll take the 1-week challenge.
-            Just $35 per month for viewing unlimited stocks.
+            Just $1.99/week for viewing unlimited stocks.
             And that includes all stocks and crypto on Yahoo! Finance. We're waiting for you to grin larger
             than you ever have.<br><br>
             After the first wave of monthly user signs up, we'll be adding minute-to-minute accuracy. It's been
             tested, and it works.
-            So if you're ready, get in and try it out. Just $35 per month for your first stock.<br>
+            So if you're ready, get in and try it out. Just $1.99/week for your first stock.<br>
         </article>
     <?php } else { ?>
-        <article class="columns">
+        <article class="chart">
             <canvas id="stockChart" style="max-width:500px"></canvas>
             <div id='tradingpitpresent'></div><br>
             <div id='tradingpitfuture'></div><br>
@@ -114,12 +117,15 @@ $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
             <pipe id='tradingpit' ajax='./chartbtc.php?page=<?= $gptick ?>' insert='stockInfo'></pipe>
         </article>
     <?php } ?>
+    </div>
 </body>
 
 <script>
 
     function getChartPresent() {
+        if (document.getElementById("stockChartPresent"))
         document.getElementById("stockChartPresent").textContent = "";
+        if (document.getElementById("stockChartFuture"))
         document.getElementById("stockChartFuture").textContent = "";
         var dates = new Date(Date.now());
         var chartDates = new Array();

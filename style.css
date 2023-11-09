@@ -14,22 +14,23 @@ h1 {
 }
 
 .container {
-    grid-template-columns: 200px 250px 500px;
-    column-gap: 10px;
-    row-gap: 15px;
-    justify-items: start;
+    grid-template-columns: [first] auto [line2] auto [line3] auto [end];
+    grid-template-rows: [top] 300px;
 }
+
 .menu {
-    grid-column-start: 1;
-    grid-row-start: 1;
+    grid-column: first / line2;
+    grid-row: top;
 }
 
 .prices {
-    grid-column-start: 2;
+    grid-column: line2 / line3;
+    grid-row: top;
 }
 
 .chart {
-    grid-column-start: 3;
+    grid-column: line3 / end;
+    grid-row: top;
 }
 
 body {
@@ -39,10 +40,6 @@ body {
 
 .borders {
     -webkit-text-stroke: 1px black;
-}
-
-button {
-    color: black;
 }
 
 .information {
@@ -59,15 +56,4 @@ span,
 p,
 main {
     color: lightgray;
-}
-
-.footer {
-    color: lightgray;
-    background-color: black;
-    height: fit-content;
-    margin-bottom: 0px;
-    margin-left: 0px;
-    margin-right: 0px;
-    position: absolute;
-    z-index: 2;
 }

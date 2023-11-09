@@ -20,7 +20,7 @@ $likeHTML = "";
 $likeArray = [];
 // Display the likes
 foreach ($likes as $like) {
-    $likeArray[] = ['page' => strtoupper($like['page']), 'html' => "<ul><a href='./dashboard.php?page=" . $like['page'] . "'>" . strtoupper($like['page']) . "</a></ul>" ];
+    $likeArray[] = ['page' => strtoupper($like['page']), 'html' => "<ul><a href='./rebo.php?page=" . $like['page'] . "'>" . strtoupper($like['page']) . "</a></ul>" ];
 }
 $page = array_column($likeArray,'page');
 array_multisort($page, SORT_ASC, $likeArray);
@@ -42,7 +42,7 @@ $pdo = null;
         <?php } else { ?>
             <li><a href="register.php">Register</a></li>
         <?php } ?>
-        <li><a href="today.php">Today's Page</a></li>
+        <li><a href="randompage.php">Today's Page</a></li>
         <li><font style="color:lightgray">Favorites</font><br>
             <?= $likeHTML; ?>
         </li>
@@ -55,7 +55,7 @@ $pdo = null;
 
     <?php
     $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
-    if ($_SESSION['paid'] == 1) { // && substr($gptick,0,3) == substr($_SESSION['page'],0,3)) { ?>
+    if ($_SESSION['paid'] == 1) { ?>
         <div class="like-dislike">
             <?php $page = (isset($_GET['page'])) ? $_GET['page'] : $_POST['page']; ?>
             <input id="l-page" class="form-like" type="hidden" name="page" value="<?= $page; ?>">

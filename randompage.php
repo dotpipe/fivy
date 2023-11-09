@@ -5,8 +5,7 @@ $data = json_decode($json, true);
 srand(time());
 $randomIndex = rand(0, count($data) - 1);
 $randomEntry = $data[$randomIndex];
-$_SESSION['page'] = $randomEntry['Symbol'];
+$_SESSION['page3'] = $randomEntry['Symbol'];
 $page = $randomEntry['Symbol'];
-
 header("Location: ./dashboard.php?page=$page");
 ?>

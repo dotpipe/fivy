@@ -1,6 +1,8 @@
 <?php
-session_start();
-$_SESSION['page '] = $_GET['page'];
-unset($_GET);
-header("Location: ./dashboard.php");
+if (!isset($_SESSION))
+    session_start();
+
+$_SESSION['page3'] = $_GET['page'];
+
+header("Location: ./dashboard.php?page=". $_SESSION["page3"]);
 ?>

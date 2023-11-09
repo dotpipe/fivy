@@ -35,53 +35,57 @@ $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
             <td style="align:top;width:200;margin-top:50">
                 <?= include('menu.php'); ?>
             </td>
-            <td rowspan='2'>
+            <td>
                 <article style="align:top;position:absolute;z-index:2;margin-left:200">
                     <form method="GET" action="dashboard.php">
                         <input type="text" name="page" placeholder="Enter Ticker here">
                         <button onclick>Look Up</button>
+                    </form>
+                    <?php
+                    if ($_SESSION['paid'] != 1) { ?>
+                        <div id="paypal-button-container-P-56U667816V9552243MVGDTNY"></div>
+                        <script
+                            src="https://www.paypal.com/sdk/js?client-id=AU3GPvXWfZx8F-s29cYDuURasyjwyBdiANh1eF-SMGnfqATPP2LbQ80URor91syyH_0tl2yPsOFP-_eK&vault=true&intent=subscription"
+                            data-sdk-integration-source="button-factory"></script>
+                        <script>
+                            paypal.Buttons({
+                                style: {
+                                    shape: 'pill',
+                                    color: 'white',
+                                    layout: 'horizontal',
+                                    label: 'paypal'
+                                },
+                                createSubscription: function (data, actions) {
+                                    return actions.subscription.create({
+                                        /* Creates the subscription */
+                                        plan_id: 'P-56U667816V9552243MVGDTNY'
+                                    });
+                                },
+                                onApprove: function (data, actions) {
+                                    alert(data.subscriptionID); // You can add optional success message for the subscriber here
+                                }
+                            }).render('#paypal-button-container-P-56U667816V9552243MVGDTNY'); // Renders the PayPal button
+                        </script>
                         <?php
-                        if ($_SESSION['paid'] != 1) { ?>
-                            <div id="paypal-button-container-P-56U667816V9552243MVGDTNY"></div>
-                            <script
-                                src="https://www.paypal.com/sdk/js?client-id=AU3GPvXWfZx8F-s29cYDuURasyjwyBdiANh1eF-SMGnfqATPP2LbQ80URor91syyH_0tl2yPsOFP-_eK&vault=true&intent=subscription"
-                                data-sdk-integration-source="button-factory"></script>
-                            <script>
-                                paypal.Buttons({
-                                    style: {
-                                        shape: 'pill',
-                                        color: 'white',
-                                        layout: 'horizontal',
-                                        label: 'paypal'
-                                    },
-                                    createSubscription: function (data, actions) {
-                                        return actions.subscription.create({
-                                            /* Creates the subscription */
-                                            plan_id: 'P-56U667816V9552243MVGDTNY'
-                                        });
-                                    },
-                                    onApprove: function (data, actions) {
-                                        alert(data.subscriptionID); // You can add optional success message for the subscriber here
-                                    }
-                                }).render('#paypal-button-container-P-56U667816V9552243MVGDTNY'); // Renders the PayPal button
-                            </script>
-                            <?php
-                        }
-                        if ($_SESSION['paid'] == 1) { ?>
-                            <pipe id="info" class="pipe" ajax="./btc.php?page=<?= $_SESSION['page']; ?>" insert="info"></pipe>
-                </td>
-            <?php } else { ?>
-                <td style="background-color:white">
-                    <canvas id="stockChart" style="width:100%;max-width:700px"></canvas>
-                    <div id='tradingpitpresent'></div><br>
-                    <div id='tradingpitfuture'></div><br>
-                    <canvas id="stockChartPresent" style="width:100%;max-width:700px"></canvas>
-                    <canvas id="stockChartFuture" style="max-width:500px"></canvas>
-                    <div id='stockInfo' style="display:block"></div>
-                    <pipe id='tradingpit' ajax='./chartbtc.php?page=<?= $gptick ?>' insert='stockInfo'></pipe>
+                    }
+                    // echo strtoupper(substr($_GET['page'],0,strlen($_GET['page']))) . " " .strtoupper($_SESSION['page3']);
+                    if ($_SESSION['paid'] == 1 && strtoupper($_SESSION['page3']) == strtoupper($_GET['page'])) { ?>
+                        <pipe id="info" class="pipe" ajax="./btc.php?page=<?= $gptick; ?>" insert="info"></pipe>
+                    <?php } else {
+                        echo "<h2>Please join if you love the site so much!<br>It's really good at figuring this hedge out!</h2>";
+                    } ?>
+                </article>
+            </td>
+            <td>
+                <canvas id="stockChart" style="margin-left:600px;width:100%;max-width:500px"></canvas>
+                <div id='tradingpitpresent'></div><br>
+                <div id='tradingpitfuture'></div><br>
+                <canvas id="stockChartPresent" style="width:100%;max-width:500px"></canvas>
+                <canvas id="stockChartFuture" style="max-width:500px"></canvas>
+                <div id='stockInfo' style="display:block"></div>
+                <pipe id='tradingpit' ajax='./chartbtc.php?page=<?= $gptick ?>' insert='stockInfo'></pipe>
 
-                </td>
-            <?php } ?>
+            </td>
         </tr>
     </table>
 </body>
@@ -90,9 +94,9 @@ $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
 
     function getChartPresent() {
         if (document.getElementById("stockChartPresent"))
-        document.getElementById("stockChartPresent").textContent = "";
+            document.getElementById("stockChartPresent").textContent = "";
         if (document.getElementById("stockChartFuture"))
-        document.getElementById("stockChartFuture").textContent = "";
+            document.getElementById("stockChartFuture").textContent = "";
         var dates = new Date(Date.now());
         var chartDates = new Array();
         var days = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
@@ -178,4 +182,4 @@ $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
     getChartPresent();
 </script>
 
-</html> 
+</html>

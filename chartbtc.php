@@ -889,8 +889,8 @@ class CNGN
     }
 }
 $ticker = '';
-if (isset($_SESSION['page']))
-    $ticker = strtoupper($_SESSION['page']);
+if (isset($_GET['page']))
+    $ticker = strtoupper($_GET['page']);
 else
     exit();
 $next = new CNGN(5);
