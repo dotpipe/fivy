@@ -8,5 +8,5 @@ $randomEntry = $data[$randomIndex];
 $_SESSION['page'] = $randomEntry['Symbol'];
 $page = $randomEntry['Symbol'];
 
-header("Location: ./today.php?page=$page");
+header("Location: ./dashboard.php?page=$page");
 ?>

@@ -78,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <button style="color:black" type="submit">Login</button>
                 </form>
-                <span>Don't have an account? <a href="register.php">Register</a></span><br>
+                <span>Don't have an account? <a href="register.php">Register</a> for a free trial!</span><br>
+                <span>No credit card required. We will never sell or give your information to anyone!</span><br>
                 <span>Forgot your password? <a href="password_reset.php">Reset Password</a></span>
             </td>
             <td rowspan='2'>
@@ -95,12 +96,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     on that information
                     every 5 days. And we keep it there so you see the element of surprise you're going to have forever.
                     <br><br>This information is so accurate. Almost perfect. We hope you'll take the 1-week challenge.
-                    Just $35 per month for viewing unlimited stocks.
+                    Just $1.99/week for viewing unlimited stocks.
                     And that includes all stocks and crypto on Yahoo! Finance. We're waiting for you to grin larger
                     than you ever have.<br><br>
                     After the first wave of monthly user signs up, we'll be adding minute-to-minute accuracy. It's been
                     tested, and it works.
-                    So if you're ready, get in and try it out. Just $35 per month for your first stock.<br>
+                    So if you're ready, get in and try it out. Just $1.99/week for your first stock.<br>
                 </article>
             </td>
         </tr>

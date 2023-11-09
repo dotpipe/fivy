@@ -17,9 +17,15 @@ $stmt->bindParam(':user_id', $user_id);
 $stmt->execute();
 $likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $likeHTML = "";
+$likeArray = [];
 // Display the likes
 foreach ($likes as $like) {
-    $likeHTML .= "<ul><a href='./dashboard.php?page=" . $like['page'] . "'>" . strtoupper($like['page']) . "</a></ul>";
+    $likeArray[] = ['page' => strtoupper($like['page']), 'html' => "<ul><a href='./dashboard.php?page=" . $like['page'] . "'>" . strtoupper($like['page']) . "</a></ul>" ];
+}
+$page = array_column($likeArray,'page');
+array_multisort($page, SORT_ASC, $likeArray);
+foreach ($likeArray as $like) {
+    $likeHTML .= $like['html'];
 }
 $likeCount = getLikeCount($_SESSION['page']);
 $dislikeCount = getDislikeCount($_SESSION['page']);
@@ -37,10 +43,10 @@ $pdo = null;
             <li><a href="register.php">Register</a></li>
         <?php } ?>
         <li><a href="today.php">Today's Page</a></li>
-        <li><a href="favorites.php">Favorites</a><br>
+        <li><font style="color:lightgray">Favorites</font><br>
             <?= $likeHTML; ?>
         </li>
-        <?php if ($_SESSION['username'] == "1") { ?>
+        <?php if (isset($_SESSION['username'])) { ?>
             <li><a href="logout.php">Logout</a></li>
         <?php } else { ?>
             <li><a href="login.php">Login</a></li>
@@ -48,21 +54,20 @@ $pdo = null;
     </ul>
 
     <?php
-    if ($_SERVER['PHP_SELF'] == '/fivy/dashboard.php' && $_SESSION['paid'] == 1) { ?>
+    $gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
+    if ($_SESSION['paid'] == 1) { // && substr($gptick,0,3) == substr($_SESSION['page'],0,3)) { ?>
         <div class="like-dislike">
             <?php $page = (isset($_GET['page'])) ? $_GET['page'] : $_POST['page']; ?>
             <input id="l-page" class="form-like" type="hidden" name="page" value="<?= $page; ?>">
             <input id="l-type" class="form-like" type="hidden" name="like" value="1">
             <dyn id="l-submit" class="redirect" form-class="form-like" ajax="vote.php">
                 <img style="width:75px;height:75px" src="thumbsup.png">
-            </dyn>(
-            <?= $likeCount; ?>)
+            </dyn>(<?= $likeCount; ?>)
             <input id="d-page" class="form-dislike" type="hidden" name="page" value="<?= $page; ?>">
             <input id="d-type" class="form-dislike" type="hidden" name="like" value="0">
             <dyn id="d-submit" class="redirect" form-class="form-dislike" ajax="vote.php">
                 <img style="width:75px;height:75px" src="thumbsdown.png">
-            </dyn>(
-            <?= $dislikeCount; ?>)
+            </dyn>(<?= $dislikeCount; ?>)
         </div>
     <?php } ?>
 </nav>

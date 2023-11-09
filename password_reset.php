@@ -1,7 +1,13 @@
 <?php
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 require_once 'config.php';
 require_once 'db.php';
 require_once 'functions.php';
+require_once './vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require_once './vendor/phpmailer/phpmailer/src/Exception.php';
+require_once './vendor/phpmailer/phpmailer/src/SMTP.php';
 
 if (!isset($_SESSION))
     session_start();
@@ -33,6 +39,7 @@ function sendResetCode($email)
     // Get the user's email and id
     $userEmail = $user['email'];
     $userId = $user['id'];
+    $username = $user['username'];
 
     // Generate a 5-digit reset code
     $resetCode = rand(10000, 99999);
@@ -41,38 +48,55 @@ function sendResetCode($email)
     $stmt->bind_param("ii", $resetCode, $userId);
     $stmt->execute();
     $stmt->close();
+    
+    $mail = new PHPMailer();
+    
+    //$mail->SMTPDebug = 3;                               // Enable verbose debug output
+    
+    $mail->isSMTP();                                      // Set mailer to use SMTP
+    // $mail->Host = 'localhost';  // Specify main and backup SMTP servers
+    // $mail->SMTPAuth = true;                               // Enable SMTP authentication
+    // $mail->Username = "ww";                 // SMTP username
+    // $mail->Password = 'RTYfGhVbN!3$###';                           // SMTP password
+    $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+    $mail->Port = 587;                                    // TCP port to connect to
 
-    // Create the email content
-    $subject = "Fivy.org Password Reset Code";
-    $message = "Your password reset code is: " . $resetCode;
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= 'From: <noreply@fivy.org>' . "\r\n";
-
-    // Send the email
-    if (mail($userEmail, $subject, $message, $headers)) {
+    $mail->setFrom('noreply@fivy.org', 'Fivy Support Desk');
+    $mail->addAddress($email, $user['name']);
+    $mail->WordWrap = 50;                                 // Set word wrap to 50 characters
+    $mail->isHTML(true);                                  // Set email format to HTML
+    
+    $mail->Subject = 'Fivy.org Password Reset Code';
+    $mail->MsgHTML("Your password reset link is at https://fivy.org/fivy/reset_with_code.php?code=".$resetCode);
+    // $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+    
+    if($mail->send()) {
         echo "Reset code sent to " . $userEmail;
-    } else {
-        echo "Failed to send reset code.";
-        return false;
     }
-
+    else {
+        echo 'Message could not be sent.';
+        echo 'Mailer Error!: ' . $mail->ErrorInfo;
+        return false;
+    } 
     return true;
 }
 $error = "";
 // Check if form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
+if (isset($_POST["email"]))
+{
     // Get form data
-    $email = $_POST['email'];
-
+    $email = ($_POST["email"]);
     // Create and send reset code
-    if (sendResetCode($email)) {
-        header('Location: reset_with_code.php');
+    if (sendResetCode($email) == false) {
+        echo "Didn't work..";
         exit;
-    } else {
+    }// else
+     {
         // Email not found in database
         $error = $email . 'Email not found';
     }
+    echo "Thank you...";
+    // header('Location: ./login.php');
 }
 
 ?>

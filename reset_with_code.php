@@ -2,10 +2,10 @@
 require_once 'config.php';
 require_once 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $resetCode = $_POST['resetCode'];
-    $newPassword = $_POST['newPassword'];
-    $email = $_POST['resetEmail'];
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $resetCode = $_GET['resetCode'];
+    $newPassword = $_GET['newPassword'];
+    $email = $_GET['resetEmail'];
 
     // Fetch the user from the database
     $stmt = $mysqli->prepare("SELECT * FROM users WHERE email = ?");
@@ -30,12 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<form method="POST">
-    <label for="resetEmail">Email:</label>
-    <input type="text" id="resetEmail" name="resetEmail" required>
-    <input type="hidden" name="userId" value="<?= $_GET['userId'] ?>">
+<form method="GET">
     <label for="resetCode">Reset Code:</label>
-    <input type="text" id="resetCode" name="resetCode" required>
+    <input type="hidden" id="resetCode" name="resetCode" value='<?= $_GET['code'] ?>' required>
     <label for="newPassword">New Password:</label>
     <input type="password" id="newPassword" name="newPassword" required>
     <button type="submit">Reset Password</button>

@@ -318,8 +318,9 @@ $next = new CNGN();
 if (isset($_GET['g'])) {
     $ticker = "AMZN?";
 }
-
-if (!file_exists('./tickers/' . $ticker . '.csv') || filemtime('./tickers/' . $ticker . '.csv') < time() - 60 * 60 * 24 * 5) {
+$day = date("l",time());
+$days = [ "Saturday", "Sunday", "Monday", "Tuesday","Wednesday", "Thursday", "Friday" ];
+if (!file_exists('./tickers/' . $ticker . '.csv') || array_search($day, $days) < 2 || filemtime('./tickers/' . $ticker . '.csv') < time() - 60 * 60 * 24 * 5) {
     $time_past = time() - (60 * 60 * 24 * 365 * 2);
     //$time_past = date("Y-m-d", $time_past);
     $time_now = date("Y-m-d", time());

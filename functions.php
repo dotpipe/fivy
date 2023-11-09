@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             addDisLike($_SESSION['user_id'], $page);
         }   
     }
+    unset($_POST);
 }
 
 // Function to check if user has already disliked the page

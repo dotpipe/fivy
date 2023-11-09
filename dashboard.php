@@ -19,12 +19,11 @@ else
     $_SESSION['paid'] = 0;
 
 // Get today's page
-// $todayPage = getTodayPage();
 
-if (isset($_POST['page']) && $_POST['page'] != ""){
+if (isset($_POST['page']) && $_POST['page'] != "") {
     $_SESSION['page'] = $_POST['page'];
 }
-
+$gptick = (isset($_POST['page'])) ? $_POST['page'] : $_GET['page'];
 ?>
 
 <!DOCTYPE html>
@@ -35,81 +34,176 @@ if (isset($_POST['page']) && $_POST['page'] != ""){
     <link rel="stylesheet" type="text/css" href="./style.css">
     <link rel="icon" href="./smallleaf.png" type="image/x-icon">
     <script src="pipes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+    </script>
     <script
         src="https://www.paypal.com/sdk/js?client-id=AU3GPvXWfZx8F-s29cYDuURasyjwyBdiANh1eF-SMGnfqATPP2LbQ80URor91syyH_0tl2yPsOFP-_eK"></script>
 </head>
 
 <body>
-    <table>
-        <tr>
-            <td style="align:top;width:200;margin-top:50">
-                <?= include('menu.php'); ?>
-            </td>
-            <td>
-                <article style="align:top;position:absolute;z-index:2;margin-left:200">
-                    <form method="POST" action="dashboard.php">
-                        <input type="text" name="page" placeholder="Enter Ticker here">
-                        <button onclick>Look Up</button>
-                        <?php
-                        if ($_SESSION['paid'] != 1) { ?>
-                            <div id="paypal-button-container-P-7HK63531FS910263RMVD55WI"></div>
-                            <script
-                                src="https://www.paypal.com/sdk/js?client-id=AdvDfbOhJIOM4hn3n9AfE1loBfADjY0GM8cFTJwWiat9bqoDY9zU64gmv0P7nWabg6TETsZ7paH-k2Ud&vault=true&intent=subscription"
-                                data-sdk-integration-source="button-factory"></script>
-                            <script>
-                                paypal.Buttons({
-                                    style: {
-                                        shape: 'rect',
-                                        color: 'gold',
-                                        layout: 'vertical',
-                                        label: 'subscribe'
-                                    },
-                                    createSubscription: function (data, actions) {
-                                        return actions.subscription.create({
-                                            /* Creates the subscription */
-                                            plan_id: 'P-7HK63531FS910263RMVD55WI'
-                                        });
-                                    },
-                                    onApprove: function (data, actions) {
-                                        alert(data.subscriptionID); // You can add optional success message for the subscriber here
-                                    }
-                                }).render('#paypal-button-container-P-7HK63531FS910263RMVD55WI'); // Renders the PayPal button
-                            </script>
-                            <pipe id="info" class="pipe" ajax="./btc.php?g=oiei" insert="info"></pipe>
-                            <?php
-                        } else if (isset($_POST['page']) || isset($_GET['page'])) {
-                            $page = isset($_POST['page']) ? $_POST['page'] : $_GET['page']; ?>
-                                <pipe id="info" class="pipe" ajax="./btc.php?page=<?= $page; ?>" insert="info"></pipe>
-                        <?php } ?>
-                    </form>
-                </article>
-            </td>
-            <?php if (isset($_SESSION['paid']) == 0) { ?>
-            <td>
-                <article class="information">
-                    If you've been in the shares market you've been asking and paying for information for sometime now.
-                    You've also been wondering how to get further information. Like how to gain insights. Let Fivy
-                    handle that!
-                    You're using an obsolete system if you're not choosing AI! We use an waveform algorithm. It's been
-                    specially
-                    designed over 2 years of work to capture almost everything in the distance. Up to 100% (eg BTC-USD).
-                    So many stocks are here. We use the <a href="finance.yahoo.com">Yahoo! Finance</a> for our base
-                    numbers.
-                    The information is accurate. Always. And the further numbers are equally as good.<br><br> We call
-                    on that information
-                    every 5 days. And we keep it there so you see the element of surprise you're going to have forever.
-                    <br><br>This information is so accurate. Almost perfect. We hope you'll take the 1-week challenge.
-                    Just $35 per month for viewing unlimited stocks.
-                    And that includes all stocks and crypto on Yahoo! Finance. We're waiting for you to grin larger
-                    than you ever have.<br><br>
-                    After the first wave of monthly user signs up, we'll be adding minute-to-minute accuracy. It's been
-                    tested, and it works.
-                    So if you're ready, get in and try it out. Just $35 per month for your first stock.<br>
-                </article>
-            </td>
-            <?php } ?>
-        </tr>
-    </table>
+    <article class="columns">
+        <?= include('menu.php'); ?>
+    </article>
+    <article class="columns" style="align:top;">
+        <form method="POST" action="dashboard.php">
+            <input type="text" name="page" placeholder="Enter Ticker here">
+            <button onclick>Look Up</button>
+            <?php
+            if ($_SESSION['paid'] != 1) { ?>
+                <div id="paypal-button-container-P-56U667816V9552243MVGDTNY"></div>
+                <script
+                    src="https://www.paypal.com/sdk/js?client-id=AU3GPvXWfZx8F-s29cYDuURasyjwyBdiANh1eF-SMGnfqATPP2LbQ80URor91syyH_0tl2yPsOFP-_eK&vault=true&intent=subscription"
+                    data-sdk-integration-source="button-factory"></script>
+                <script>
+                    paypal.Buttons({
+                        style: {
+                            shape: 'pill',
+                            color: 'white',
+                            layout: 'horizontal',
+                            label: 'paypal'
+                        },
+                        createSubscription: function (data, actions) {
+                            return actions.subscription.create({
+                                /* Creates the subscription */
+                                plan_id: 'P-56U667816V9552243MVGDTNY'
+                            });
+                        },
+                        onApprove: function (data, actions) {
+                            alert(data.subscriptionID); // You can add optional success message for the subscriber here
+                        }
+                    }).render('#paypal-button-container-P-56U667816V9552243MVGDTNY'); // Renders the PayPal button
+                </script>
+                <?php
+            }
+            if ($_SESSION['paid'] == 1 && $_SESSION['page'] == $_GET['page']) { ?>
+                <pipe id="info" class="pipe" ajax="./btc.php?page=<?= $gptick; ?>" insert="info"></pipe>
+            <?php } else {
+                echo "<h2>Please join if you love the site so much!<br>It's really good at figuring this hedge out!</h2>";
+            } ?>
+        </form>
+    </article>
+    <?php if (isset($_SESSION['paid']) == 0) { ?>
+        <article class="information">
+            If you've been in the shares market you've been asking and paying for information for sometime now.
+            You've also been wondering how to get further information. Like how to gain insights. Let Fivy
+            handle that!
+            You're using an obsolete system if you're not choosing AI! We use an waveform algorithm. It's been
+            specially
+            designed over 2 years of work to capture almost everything in the distance. Up to 100% (eg BTC-USD).
+            So many stocks are here. We use the <a href="finance.yahoo.com">Yahoo! Finance</a> for our base
+            numbers.
+            The information is accurate. Always. And the further numbers are equally as good.<br><br> We call
+            on that information
+            every 5 days. And we keep it there so you see the element of surprise you're going to have forever.
+            <br><br>This information is so accurate. Almost perfect. We hope you'll take the 1-week challenge.
+            Just $35 per month for viewing unlimited stocks.
+            And that includes all stocks and crypto on Yahoo! Finance. We're waiting for you to grin larger
+            than you ever have.<br><br>
+            After the first wave of monthly user signs up, we'll be adding minute-to-minute accuracy. It's been
+            tested, and it works.
+            So if you're ready, get in and try it out. Just $35 per month for your first stock.<br>
+        </article>
+    <?php } else { ?>
+        <article class="columns">
+            <canvas id="stockChart" style="max-width:500px"></canvas>
+            <div id='tradingpitpresent'></div><br>
+            <div id='tradingpitfuture'></div><br>
+            <canvas id="stockChartPresent" style="max-width:500px"></canvas>
+            <canvas id="stockChartFuture" style="max-width:500px"></canvas>
+            <div id='stockInfo' style="display:block"></div>
+            <pipe id='tradingpit' ajax='./chartbtc.php?page=<?= $gptick ?>' insert='stockInfo'></pipe>
+        </article>
+    <?php } ?>
 </body>
+
+<script>
+
+    function getChartPresent() {
+        document.getElementById("stockChartPresent").textContent = "";
+        document.getElementById("stockChartFuture").textContent = "";
+        var dates = new Date(Date.now());
+        var chartDates = new Array();
+        var days = ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"];
+
+        for (i = dates.getDay(); (i) > dates.getDay() - 21; i--) {
+            if (i % 7 != 5 && i % 7 != 6) {
+                chartDates.push(days[Math.abs(7 - i) % 5]);
+            }
+            else
+                i--;
+        }
+        var delay = 4000;
+        var arg = "<?= $gptick; ?>";// document.getElementById("tickinput").value;
+        setTimeout(() => {
+            var stockTag = document.getElementById("tradingpitpresent");
+
+            stockTag.setAttribute("ajax", 'chart.php?page=' + arg);
+            stockTag.setAttribute("insert", 'stockInfo');
+            pipes(stockTag);
+            const xValues = chartDates;
+            let yValues = document.getElementById("stockInfo").textContent;
+            console.log(yValues);
+            try {
+
+                yValues = JSON.parse(yValues);
+                console.log(yValues);
+                new Chart("stockChartPresent", {
+                    type: "line",
+                    data: {
+                        labels: xValues,
+                        datasets: [
+                            {
+                                label: "Real Price",
+                                backgroundColor: "rgba(0,0,255,0.0)",
+                                borderColor: "rgba(0,0,255,1)",
+                                data: yValues["r"]["p"].slice(-21)
+                            },
+                            {
+                                label: "Imaginary",
+                                backgroundColor: "rgba(255,0,0,0.0)",
+                                borderColor: "rgba(255,0,0,1)",
+                                data: yValues["i"]["p"].slice(-21)
+                            }
+                        ]
+                    },
+                    options: {}
+                });
+
+                dates = new Date(Date.now());
+                chartDates = new Array();
+                for (i = dates.getDay(); (i) < dates.getDay() + 21; i++) {
+                    if (i % 7 != 5 && i % 7 != 6) {
+                        chartDates.push(days[Math.abs(i % 7)]);
+                    }
+                    else
+                        i++;
+                }
+                new Chart("stockChartFuture", {
+                    type: "line",
+                    data: {
+                        labels: chartDates,
+                        datasets: [
+                            {
+                                label: "Estimated Future Gain/Loss",
+                                backgroundColor: "rgba(0,0,255,0.0)",
+                                borderColor: "rgba(0,0,255,1)",
+                                data: yValues["r"]["f"].slice(-25)
+                            },
+                            {
+                                label: "Algo. Movement of Gain/Loss",
+                                backgroundColor: "rgba(255,0,0,0.0)",
+                                borderColor: "rgba(255,0,0,1)",
+                                data: yValues["i"]["f"].slice(-25)
+                            }
+                        ]
+                    },
+                    options: {}
+                });
+                document.getElementById("stockInfo").textContent = "";
+            } catch (error) { console.log(error); getChartPresent(arg); };
+        }, delay);
+    }
+    getChartPresent();
+</script>
 
 </html>
